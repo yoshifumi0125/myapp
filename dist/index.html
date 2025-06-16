@@ -1,0 +1,1045 @@
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="mobile-web-app-capable" content="yes">
+    <title>SaaS販売管理システム</title>
+    <!-- Make CSS path explicit. Ensure your server serves this with Content-Type: text/css -->
+
+    <script type="importmap">
+    {
+      "imports": {
+        "@google/genai": "https://esm.sh/@google/genai@^0.8.0",
+        "marked": "https://esm.sh/marked@^15.0.8",
+        "react/": "https://esm.sh/react@^19.1.0/"
+      }
+    }
+    </script>
+  <script type="module" crossorigin src="/assets/index-qQBMbq2P.js"></script>
+  <link rel="stylesheet" crossorigin href="/assets/index-C7rMXNW5.css">
+</head>
+<body>
+    <!-- サイドバー -->
+    <div class="sidebar">
+        <div class="sidebar-icon active" title="ダッシュボード" data-tab-target="home">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/>
+            </svg>
+        </div>
+        <div class="sidebar-icon" title="分析" data-tab-target="analytics">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M16 6l2.29 2.29-4.88 4.88-4-4L2 16.59 3.41 18l6-6 4 4 6.3-6.29L22 12V6z"/>
+            </svg>
+        </div>
+        <div class="sidebar-icon" title="顧客" data-tab-target="sales">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+            </svg>
+        </div>
+        <div class="sidebar-icon" title="財務" data-tab-target="finance">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1.41 16.09V20h-2.67v-1.93c-1.71-.36-3.16-1.46-3.27-3.4h1.96c.1.93.66 1.64 2.08 1.64 1.51 0 2.2-.63 2.2-1.51s-.6-1.32-2.06-1.71c-1.93-.51-3.36-1.3-3.36-3.17 0-1.59 1.22-2.77 2.94-3.12V5h2.67v1.84c1.51.32 2.75 1.3 2.93 3.08h-1.96c-.12-.8-.59-1.43-1.69-1.43-1.19 0-1.88.51-1.88 1.36 0 .79.6 1.22 2.06 1.61 2.14.56 3.36 1.41 3.36 3.27-.01 1.71-1.25 2.87-3.31 3.36z"/>
+            </svg>
+        </div>
+        <div class="sidebar-icon" title="設定" data-tab-target="integrations"> <!-- Changed target to integrations for now -->
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47.41l.36 2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/>
+            </svg>
+        </div>
+    </div>
+
+    <!-- ヘッダーナビゲーション -->
+    <div class="header-nav">
+        <div class="nav-tabs">
+            <div class="nav-tab active" data-tab-target="home">ホーム</div>
+            <div class="nav-tab" data-tab-target="sales">営業</div>
+            <div class="nav-tab" data-tab-target="marketing">マーケティング</div>
+            <div class="nav-tab" data-tab-target="customer-success">カスタマーサクセス</div>
+            <div class="nav-tab" data-tab-target="finance">財務</div>
+            <div class="nav-tab" data-tab-target="analytics">分析</div>
+            <div class="nav-tab" data-tab-target="subscription">サブスク分析</div>
+            <div class="nav-tab" data-tab-target="integrations">連携</div>
+        </div>
+    </div>
+
+    <!-- メインコンテンツ -->
+    <div class="main-content">
+        <!-- Home タブ -->
+        <div id="home" class="tab-content active">
+            <div class="content-header">
+                <h1 class="page-title">ホーム</h1>
+                <div class="dropdown">
+                    <button class="dropdown-toggle">
+                        今月
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M7 10l5 5 5-5z"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Top wins card -->
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">
+                        <span class="trophy-icon" role="img" aria-label="trophy">🏆</span>
+                        今週のトップ成果
+                    </h2>
+                </div>
+                <div id="topWinsContent">
+                    <div class="no-data">データを追加してください</div>
+                </div>
+            </div>
+
+            <!-- Metrics Grid -->
+            <div class="metrics-grid">
+                <!-- MRR Breakdown -->
+                <div class="metric-item">
+                    <div class="metric-header">
+                        <h3 class="metric-label">MRR内訳</h3>
+                        <div class="dropdown">
+                            <button class="dropdown-toggle">今月</button>
+                        </div>
+                    </div>
+                    <ul class="breakdown-list">
+                        <li class="breakdown-item">
+                            <div class="breakdown-label">
+                                <span class="breakdown-indicator"></span>
+                                新規ビジネスMRR
+                            </div>
+                            <div class="breakdown-value" id="newBusinessMRR">¥0</div>
+                        </li>
+                        <li class="breakdown-item">
+                            <div class="breakdown-label">
+                                <span class="breakdown-indicator expansion"></span>
+                                拡張MRR
+                            </div>
+                            <div class="breakdown-value" id="expansionMRR">¥0</div>
+                        </li>
+                        <li class="breakdown-item">
+                            <div class="breakdown-label">
+                                <span class="breakdown-indicator contraction"></span>
+                                縮小MRR
+                            </div>
+                            <div class="breakdown-value" id="contractionMRR">¥0</div>
+                        </li>
+                        <li class="breakdown-item">
+                            <div class="breakdown-label">
+                                <span class="breakdown-indicator churn"></span>
+                                解約MRR
+                            </div>
+                            <div class="breakdown-value" id="churnMRR">¥0</div>
+                        </li>
+                        <li class="breakdown-item">
+                            <div class="breakdown-label">
+                                <span class="breakdown-indicator reactivation"></span>
+                                再活性化MRR
+                            </div>
+                            <div class="breakdown-value" id="reactivationMRR">¥0</div>
+                        </li>
+                        <li class="breakdown-item" style="border-top: 1px solid #efefef; padding-top: 16px; margin-top: 16px;">
+                            <div class="breakdown-label" style="font-weight: 600; color: #1a1d1f;">
+                                正味MRR増減
+                            </div>
+                            <div class="breakdown-value" style="font-weight: 600;" id="netMRRChange">¥0</div>
+                        </li>
+                        <li class="breakdown-item">
+                            <div class="breakdown-label">
+                                予定MRR増減
+                            </div>
+                            <div class="breakdown-value" id="scheduledMRRChange">¥0</div>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Annual Run Rate -->
+                <div class="metric-item">
+                    <div class="metric-header">
+                        <h3 class="metric-label">年間経常収益率</h3>
+                    </div>
+                    <div class="metric-value" id="annualRunRate">¥0</div>
+                    <div class="metric-change" id="arrChange">0% 過去30日間</div>
+                    <div class="chart-container">
+                        <canvas id="arrChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- MRR Movements -->
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">MRR推移</h2>
+                </div>
+                <div class="chart-container">
+                    <canvas id="mrrMovementsChart"></canvas>
+                </div>
+            </div>
+
+            <!-- MRR & Subscribers Grid -->
+            <div class="metrics-grid">
+                <div class="metric-item">
+                    <div class="metric-header">
+                        <h3 class="metric-label">MRR</h3>
+                    </div>
+                    <div class="metric-value" id="totalMRR">¥0</div>
+                    <div class="metric-change" id="mrrChangePercent">0% 過去30日間</div>
+                    <div class="chart-container">
+                        <canvas id="mrrChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="metric-item">
+                    <div class="metric-header">
+                        <h3 class="metric-label">契約者数</h3>
+                    </div>
+                    <div class="metric-value" id="subscriberCount">0</div>
+                    <div class="metric-change" id="subscriberChange">0% 過去30日間</div>
+                    <div class="chart-container">
+                        <canvas id="subscribersChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sales タブ -->
+        <div id="sales" class="tab-content">
+            <div class="content-header">
+                <h1 class="page-title">営業</h1>
+                <div style="display: flex; gap: 12px;">
+                    <button class="btn btn-secondary" id="showImportModalButton">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M9 16h6v-6h4l-7-7-7 7h4zm-4 2h14v2H5z"/>
+                        </svg>
+                        インポート
+                    </button>
+                    <button class="btn btn-secondary" id="exportCustomersButton">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/>
+                        </svg>
+                        エクスポート
+                    </button>
+                    <button class="btn btn-danger" id="bulkDeleteCustomersButton" disabled>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
+                        選択項目を削除
+                    </button>
+                    <button class="btn btn-primary" id="showAddCustomerModalButton">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+                        </svg>
+                        新規顧客追加
+                    </button>
+                </div>
+            </div>
+
+            <div class="filter-bar">
+                <input type="text" class="form-input" placeholder="顧客名で検索" id="customerSearch">
+                <select class="form-input" id="statusFilter">
+                    <option value="">全てのステータス</option>
+                    <option value="active">アクティブ</option>
+                    <option value="trial">トライアル</option>
+                    <option value="churned">解約</option>
+                </select>
+                <select class="form-input" id="planFilterSales">
+                    <option value="">全てのプラン</option>
+                    <option value="starter">スターター</option>
+                    <option value="professional">プロフェッショナル</option>
+                    <option value="enterprise">エンタープライズ</option>
+                </select>
+            </div>
+
+            <div class="card">
+                <table>
+                    <thead>
+                        <tr>
+                            <th><input type="checkbox" id="selectAllCustomersCheckbox" title="すべて選択/解除"></th>
+                            <th>顧客名</th>
+                            <th>プラン</th>
+                            <th>MRR</th>
+                            <th>初期費用</th>
+                            <th>運用代行費</th>
+                            <th>担当者</th>
+                            <th>工数(h/月)</th>
+                            <th>地域</th>
+                            <th>業界</th>
+                            <th>獲得チャネル</th>
+                            <th>ステータス</th>
+                            <th>契約開始日</th>
+                            <th>アクション</th>
+                        </tr>
+                    </thead>
+                    <tbody id="customerTableBody">
+                        <!-- 動的に生成 -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Marketing タブ -->
+        <div id="marketing" class="tab-content">
+            <div class="content-header">
+                <h1 class="page-title">マーケティング</h1>
+                <button class="btn btn-primary" id="showAddCampaignModalButton">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+                    </svg>
+                    キャンペーン作成
+                </button>
+            </div>
+
+            <!-- マーケティングメトリクス -->
+            <div class="metrics-grid">
+                <div class="metric-item">
+                    <h3 class="metric-label">リード数</h3>
+                    <div class="metric-value" id="totalLeads">0</div>
+                    <div class="metric-change positive" id="totalLeadsChange">↑ 0% 前月比</div>
+                </div>
+                <div class="metric-item">
+                    <h3 class="metric-label">コンバージョン率</h3>
+                    <div class="metric-value" id="conversionRate">0%</div>
+                    <div class="metric-change positive" id="conversionRateChange">↑ 0% 前月比</div>
+                </div>
+                <div class="metric-item">
+                    <h3 class="metric-label">獲得単価(CPL)</h3>
+                    <div class="metric-value" id="cplValue">¥0</div>
+                    <div class="metric-change negative" id="cplValueChange">↓ 0% 前月比</div>
+                </div>
+            </div>
+
+            <!-- キャンペーン一覧 -->
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">実施中のキャンペーン</h2>
+                </div>
+                <div id="campaignList">
+                    <!-- 動的に生成 -->
+                </div>
+            </div>
+
+            <!-- リード一覧 -->
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">リード管理</h2>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>会社名</th>
+                            <th>担当者</th>
+                            <th>Email</th>
+                            <th>ソース</th>
+                            <th>スコア</th>
+                            <th>ステータス</th>
+                            <th>登録日</th>
+                            <th>アクション</th>
+                        </tr>
+                    </thead>
+                    <tbody id="leadTableBody">
+                        <!-- 動的に生成 -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Customer Success タブ -->
+        <div id="customer-success" class="tab-content">
+            <div class="content-header">
+                <h1 class="page-title">カスタマーサクセス</h1>
+            </div>
+
+            <!-- CS メトリクス -->
+            <div class="metrics-grid">
+                <div class="metric-item">
+                    <h3 class="metric-label">NPS (Net Promoter Score)</h3>
+                    <div class="metric-value" id="npsScore">0</div>
+                    <div class="metric-change positive" id="npsScoreChange">↑ 0 前四半期比</div>
+                </div>
+                <div class="metric-item">
+                    <h3 class="metric-label">平均サポート対応時間</h3>
+                    <div class="metric-value" id="avgResponseTime">0h</div>
+                    <div class="metric-change negative" id="avgResponseTimeChange">↓ 0% 前月比</div>
+                </div>
+                <div class="metric-item">
+                    <h3 class="metric-label">顧客満足度 (CSAT)</h3>
+                    <div class="metric-value" id="csat">0%</div>
+                    <div class="metric-change positive" id="csatChange">↑ 0% 前月比</div>
+                </div>
+            </div>
+
+            <!-- ヘルススコア一覧 -->
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">顧客ヘルススコア</h2>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>顧客名</th>
+                            <th>ヘルススコア</th>
+                            <th>利用率</th>
+                            <th>最終ログイン</th>
+                            <th>サポートチケット</th>
+                            <th>CSM</th>
+                            <th>次回アクション</th>
+                        </tr>
+                    </thead>
+                    <tbody id="healthScoreTableBody">
+                        <!-- 動的に生成 -->
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- タスク管理 -->
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">今週のタスク</h2>
+                </div>
+                <div id="csTaskList">
+                    <!-- 動的に生成 -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Finance タブ -->
+        <div id="finance" class="tab-content">
+            <div class="content-header">
+                <h1 class="page-title">財務</h1>
+                <button class="btn btn-primary" id="showAddExpenseModalButton">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+                    </svg>
+                    経費登録
+                </button>
+            </div>
+
+            <!-- 収支サマリー -->
+            <div class="metrics-grid">
+                <div class="metric-item">
+                    <h3 class="metric-label">今月の収入合計</h3>
+                    <div class="metric-value" id="monthlyTotalIncome">¥0</div>
+                    <div class="metric-change positive" id="incomeChange">↑ 0% 前月比</div>
+                </div>
+                <div class="metric-item">
+                    <h3 class="metric-label">今月の支出合計</h3>
+                    <div class="metric-value" id="monthlyTotalExpense">¥0</div>
+                    <div class="metric-change negative" id="expenseChange">↑ 0% 前月比</div>
+                </div>
+                <div class="metric-item">
+                    <h3 class="metric-label">今月の収支</h3>
+                    <div class="metric-value" id="monthlyBalance">¥0</div>
+                    <div class="metric-change" id="balanceChange">利益率: 0%</div>
+                </div>
+            </div>
+
+            <!-- 収入内訳 -->
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">収入内訳</h2>
+                </div>
+                <div class="metrics-grid">
+                    <div class="metric-item">
+                        <h3 class="metric-label">月額利用料 (MRR)</h3>
+                        <div class="metric-value" id="monthlyMRRIncome">¥0</div>
+                        <div class="metric-change" id="mrrIncomeDetail">アクティブ顧客: 0社</div>
+                    </div>
+                    <div class="metric-item">
+                        <h3 class="metric-label">初期費用</h3>
+                        <div class="metric-value" id="monthlyInitialFees">¥0</div>
+                        <div class="metric-change" id="initialFeeCount">新規0件</div>
+                    </div>
+                    <div class="metric-item">
+                        <h3 class="metric-label">運用代行費</h3>
+                        <div class="metric-value" id="monthlyOperationFees">¥0</div>
+                        <div class="metric-change" id="operationFeeChangeFinance">対象顧客: 0社</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 支出内訳 -->
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">支出内訳（経費カテゴリ別）</h2>
+                </div>
+                <div id="expenseCategoryBreakdown" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 20px;">
+                    <!-- 動的に生成 -->
+                </div>
+                <div style="margin-top: 20px; padding: 16px; background: #f8f9fb; border-radius: 8px;">
+                    <h4 style="font-size: 14px; margin-bottom: 12px;">カテゴリ説明</h4>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 12px; font-size: 12px; color: #6f767e;">
+                        <div><strong>広告宣伝費:</strong> Web広告、SNS広告、イベント出展など</div>
+                        <div><strong>業務委託費:</strong> 開発、デザイン、マーケティング等の外注</div>
+                        <div><strong>人件費:</strong> 役員報酬、給与、賞与、社会保険料など</div>
+                        <div><strong>研究開発費:</strong> 製品開発、技術研究、開発ツールなど</div>
+                        <div><strong>予備投資費:</strong> 将来への投資、新規事業準備金など</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 収支一覧表 -->
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">収支一覧</h2>
+                    <div style="display: flex; gap: 10px;">
+                        <select class="form-input" id="balanceViewYear" style="width: 100px;">
+                            <option value="2025" selected>2025年</option>
+                            <option value="2024">2024年</option>
+                            <option value="2023">2023年</option>
+                        </select>
+                        <select class="form-input" id="balanceViewMonth" style="width: 100px;">
+                            <option value="1">1月</option>
+                            <option value="2">2月</option>
+                            <option value="3">3月</option>
+                            <option value="4">4月</option>
+                            <option value="5" selected>5月</option>
+                            <option value="6">6月</option>
+                            <option value="7">7月</option>
+                            <option value="8">8月</option>
+                            <option value="9">9月</option>
+                            <option value="10">10月</option>
+                            <option value="11">11月</option>
+                            <option value="12">12月</option>
+                        </select>
+                    </div>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>項目</th>
+                            <th>カテゴリ</th>
+                            <th>収入</th>
+                            <th>支出</th>
+                            <th>収支</th>
+                        </tr>
+                    </thead>
+                    <tbody id="balanceTableBody">
+                        <!-- 動的に生成 -->
+                    </tbody>
+                    <tfoot style="font-weight: bold; border-top: 2px solid #1a1d1f;">
+                        <tr>
+                            <td colspan="2">合計</td>
+                            <td id="totalIncomeFooter">¥0</td>
+                            <td id="totalExpenseFooter">¥0</td>
+                            <td id="totalBalanceFooter">¥0</td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+
+            <!-- 月次推移グラフ -->
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">月次収支推移</h2>
+                </div>
+                <div class="chart-container" style="height: 300px;">
+                    <canvas id="monthlyBalanceChart"></canvas>
+                </div>
+            </div>
+
+            <!-- 経費一覧 -->
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">経費明細</h2>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>日付</th>
+                            <th>項目名</th>
+                            <th>カテゴリ</th>
+                            <th>金額</th>
+                            <th>ステータス</th>
+                            <th>アクション</th>
+                        </tr>
+                    </thead>
+                    <tbody id="expenseTableBodyFinance">
+                        <!-- 動的に生成 -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Analytics タブ -->
+        <div id="analytics" class="tab-content">
+            <div class="content-header">
+                <h1 class="page-title">分析</h1>
+                <button class="btn btn-primary" id="generateReportButton">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/>
+                    </svg>
+                    レポート生成
+                </button>
+            </div>
+
+            <!-- CAC・LTV分析 -->
+            <div class="metrics-grid">
+                <div class="metric-item">
+                    <div class="metric-header">
+                        <h3 class="metric-label">顧客獲得コスト (CAC)</h3>
+                    </div>
+                    <div class="metric-value" id="cacValue">¥0</div>
+                    <div class="metric-change positive" id="cacValueChange">↓ 0% 前月比</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-header">
+                        <h3 class="metric-label">平均顧客生涯価値 (LTV)</h3>
+                    </div>
+                    <div class="metric-value" id="ltvValue">¥0</div>
+                    <div class="metric-change positive" id="ltvValueChange">↑ 0% 前月比</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-header">
+                        <h3 class="metric-label">LTV/CAC比率</h3>
+                    </div>
+                    <div class="metric-value" id="ltvCacRatio">0</div>
+                    <div class="metric-change positive" id="ltvCacRatioChange">↑ 0 前月比</div>
+                </div>
+            </div>
+
+            <!-- プラン別分析 -->
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">プラン別パフォーマンス</h2>
+                </div>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px;">
+                    <div style="background: #f8f9fb; padding: 20px; border-radius: 8px;">
+                        <h4 style="font-size: 14px; color: #6f767e; margin-bottom: 8px;">スターター</h4>
+                        <div style="font-size: 24px; font-weight: 600;" id="starterMetrics">¥0</div>
+                        <div style="font-size: 12px; color: #6f767e;" id="starterMetricsCount">顧客数: 0</div>
+                    </div>
+                    <div style="background: #f8f9fb; padding: 20px; border-radius: 8px;">
+                        <h4 style="font-size: 14px; color: #6f767e; margin-bottom: 8px;">プロフェッショナル</h4>
+                        <div style="font-size: 24px; font-weight: 600;" id="professionalMetrics">¥0</div>
+                        <div style="font-size: 12px; color: #6f767e;" id="professionalMetricsCount">顧客数: 0</div>
+                    </div>
+                    <div style="background: #f8f9fb; padding: 20px; border-radius: 8px;">
+                        <h4 style="font-size: 14px; color: #6f767e; margin-bottom: 8px;">エンタープライズ</h4>
+                        <div style="font-size: 24px; font-weight: 600;" id="enterpriseMetrics">¥0</div>
+                        <div style="font-size: 12px; color: #6f767e;" id="enterpriseMetricsCount">顧客数: 0</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 顧客別LTV -->
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">顧客別LTV分析</h2>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>顧客名</th>
+                            <th>契約期間</th>
+                            <th>総支払額</th>
+                            <th>予測LTV</th>
+                            <th>チャーンリスク</th>
+                        </tr>
+                    </thead>
+                    <tbody id="ltvAnalysisTableBody">
+                        <!-- 動的に生成 -->
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- レポート一覧 -->
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">定期レポート</h2>
+                </div>
+                <div class="report-grid">
+                    <div class="report-item" id="downloadMonthlyReport">
+                        <h4 style="font-size: 16px; margin-bottom: 8px;">月次レポート</h4>
+                        <p style="font-size: 12px; color: #6f767e;">前月の実績とKPI達成状況</p>
+                    </div>
+                    <div class="report-item" id="downloadQuarterlyReport">
+                        <h4 style="font-size: 16px; margin-bottom: 8px;">四半期レポート</h4>
+                        <p style="font-size: 12px; color: #6f767e;">四半期の成長分析と予測</p>
+                    </div>
+                    <div class="report-item" id="downloadAnnualReport">
+                        <h4 style="font-size: 16px; margin-bottom: 8px;">年次レポート</h4>
+                        <p style="font-size: 12px; color: #6f767e;">年間総括と次年度計画</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Subscription タブ -->
+        <div id="subscription" class="tab-content">
+            <div class="content-header">
+                <h1 class="page-title">サブスクリプション分析</h1>
+            </div>
+
+            <!-- MRR/ARR Overview -->
+            <div class="metrics-grid">
+                <div class="metric-item">
+                    <div class="metric-header">
+                        <h3 class="metric-label">MRR (月間経常収益)</h3>
+                    </div>
+                    <div class="metric-value" id="subMRR">¥0</div>
+                    <div class="metric-change positive" id="subMRRChange">↑ 0% 前月比</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-header">
+                        <h3 class="metric-label">ARR (年間経常収益)</h3>
+                    </div>
+                    <div class="metric-value" id="subARR">¥0</div>
+                    <div class="metric-change positive" id="subARRChange">↑ 0% 前年比</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-header">
+                        <h3 class="metric-label">Net Revenue Retention</h3>
+                    </div>
+                    <div class="metric-value" id="nrr">100%</div>
+                    <div class="metric-change positive" id="nrrChange">↑ 0% 前四半期比</div>
+                </div>
+            </div>
+
+            <!-- Churn & Retention Analysis -->
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">チャーン・リテンション詳細分析</h2>
+                </div>
+                <div class="metrics-grid">
+                    <div class="metric-item">
+                        <h3 class="metric-label">月次チャーン率</h3>
+                        <div class="metric-value" id="monthlyChurnRate">0%</div>
+                        <div class="metric-change" id="monthlyChurnRateChange">↓ 0% 前月比</div>
+                    </div>
+                    <div class="metric-item">
+                        <h3 class="metric-label">ARPA (平均収益/アカウント)</h3>
+                        <div class="metric-value" id="arpa">¥0</div>
+                        <div class="metric-change positive" id="arpaChange">↑ 0% 前月比</div>
+                    </div>
+                    <div class="metric-item">
+                        <h3 class="metric-label">平均継続月数</h3>
+                        <div class="metric-value" id="avgRetentionMonths">0ヶ月</div>
+                        <div class="metric-change" id="avgRetentionMonthsDetail">業界平均: 24ヶ月</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- コホート分析 -->
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">コホート分析</h2>
+                </div>
+                <div class="chart-container" style="height: 300px;">
+                    <canvas id="cohortChart"></canvas>
+                </div>
+            </div>
+
+            <!-- MRR予測 -->
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">MRR成長予測</h2>
+                </div>
+                <div class="chart-container" style="height: 300px;">
+                    <canvas id="mrrForecastChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Integrations タブ -->
+        <div id="integrations" class="tab-content">
+            <div class="content-header">
+                <h1 class="page-title">データ連携・インポート</h1>
+            </div>
+            
+            <!-- 連携済みサービス -->
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">連携済みサービス</h2>
+                </div>
+                <div class="integration-card">
+                    <div class="integration-icon" role="img" aria-label="Google Analytics">📊</div>
+                    <div style="flex: 1;">
+                        <h4 style="font-size: 16px; margin-bottom: 4px;">Google Analytics</h4>
+                        <p style="font-size: 14px; color: #6f767e;">ウェブサイトのトラフィックとコンバージョンデータ</p>
+                    </div>
+                    <button class="btn btn-secondary">設定</button>
+                </div>
+                
+                <div class="integration-card">
+                    <div class="integration-icon" role="img" aria-label="Stripe">💳</div>
+                    <div style="flex: 1;">
+                        <h4 style="font-size: 16px; margin-bottom: 4px;">Stripe</h4>
+                        <p style="font-size: 14px; color: #6f767e;">決済データとサブスクリプション管理</p>
+                    </div>
+                    <button class="btn btn-secondary">設定</button>
+                </div>
+                
+                <div class="integration-card">
+                    <div class="integration-icon" role="img" aria-label="Mailchimp">📧</div>
+                    <div style="flex: 1;">
+                        <h4 style="font-size: 16px; margin-bottom: 4px;">Mailchimp</h4>
+                        <p style="font-size: 14px; color: #6f767e;">メールマーケティングキャンペーンデータ</p>
+                    </div>
+                    <button class="btn btn-secondary">設定</button>
+                </div>
+            </div>
+
+            <!-- 利用可能な連携 -->
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">利用可能な連携</h2>
+                </div>
+                <div class="integration-card">
+                    <div class="integration-icon" role="img" aria-label="Slack">💬</div>
+                    <div style="flex: 1;">
+                        <h4 style="font-size: 16px; margin-bottom: 4px;">Slack</h4>
+                        <p style="font-size: 14px; color: #6f767e;">通知とアラートの自動送信</p>
+                    </div>
+                    <button class="btn btn-primary">連携する</button>
+                </div>
+                
+                <div class="integration-card">
+                    <div class="integration-icon" role="img" aria-label="Salesforce">📈</div>
+                    <div style="flex: 1;">
+                        <h4 style="font-size: 16px; margin-bottom: 4px;">Salesforce</h4>
+                        <p style="font-size: 14px; color: #6f767e;">CRMデータとの同期</p>
+                    </div>
+                    <button class="btn btn-primary">連携する</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 顧客追加モーダル -->
+    <div id="addCustomerModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>新規顧客追加</h2>
+                <button class="close-btn" id="closeAddCustomerModalButton">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="addCustomerForm">
+                    <div class="form-group">
+                        <label class="form-label" for="newCustomerName">会社名</label>
+                        <input type="text" class="form-input" id="newCustomerName" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="newCustomerPlan">プラン</label>
+                        <select class="form-input" id="newCustomerPlan" required>
+                            <option value="">選択してください</option>
+                            <option value="starter">スターター</option>
+                            <option value="professional">プロフェッショナル</option>
+                            <option value="enterprise">エンタープライズ</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="newCustomerMrr">月額料金 (MRR)</label>
+                        <input type="number" class="form-input" id="newCustomerMrr" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="newCustomerInitialFee">初期費用</label>
+                        <input type="number" class="form-input" id="newCustomerInitialFee" placeholder="初期費用がある場合">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="newCustomerOperationFee">運用代行費（月額）</label>
+                        <input type="number" class="form-input" id="newCustomerOperationFee" placeholder="運用代行費がある場合">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="newCustomerAssignee">担当者</label>
+                        <select class="form-input" id="newCustomerAssignee" required>
+                            <option value="">選択してください</option>
+                            <option value="田中太郎">田中太郎</option>
+                            <option value="佐藤花子">佐藤花子</option>
+                            <option value="山田次郎">山田次郎</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="newCustomerHours">予定工数（時間/月）</label>
+                        <input type="number" class="form-input" id="newCustomerHours" placeholder="月間予定工数" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="newCustomerRegion">地域</label>
+                        <select class="form-input" id="newCustomerRegion" required>
+                            <option value="">選択してください</option>
+                            <option value="関東">関東</option>
+                            <option value="関西">関西</option>
+                            <option value="中部">中部</option>
+                            <option value="九州">九州</option>
+                            <option value="北海道・東北">北海道・東北</option>
+                            <option value="中国・四国">中国・四国</option>
+                            <option value="海外">海外</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="newCustomerIndustry">業界</label>
+                        <select class="form-input" id="newCustomerIndustry" required>
+                            <option value="">選択してください</option>
+                            <option value="IT">IT・ソフトウェア</option>
+                            <option value="製造業">製造業</option>
+                            <option value="小売業">小売業</option>
+                            <option value="サービス業">サービス業</option>
+                            <option value="金融">金融・保険</option>
+                            <option value="医療">医療・福祉</option>
+                            <option value="教育">教育</option>
+                            <option value="その他">その他</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="newCustomerChannel">獲得チャネル</label>
+                        <select class="form-input" id="newCustomerChannel" required>
+                            <option value="">選択してください</option>
+                            <option value="Web検索">Web検索</option>
+                            <option value="紹介">紹介</option>
+                            <option value="イベント">イベント・展示会</option>
+                            <option value="広告">広告</option>
+                            <option value="アウトバウンド">アウトバウンド営業</option>
+                            <option value="パートナー">パートナー経由</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="cancelAddCustomerButton">キャンセル</button>
+                <button type="submit" class="btn btn-primary" id="confirmAddCustomerButton">追加</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 経費追加モーダル -->
+    <div id="addExpenseModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>経費登録</h2>
+                <button class="close-btn" id="closeAddExpenseModalButton">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="addExpenseFormFinance">
+                    <div class="form-group">
+                        <label class="form-label" for="expenseDate">日付</label>
+                        <input type="date" class="form-input" id="expenseDate" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="expenseName">項目名</label>
+                        <input type="text" class="form-input" id="expenseName" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="expenseCategoryFinance">カテゴリ</label>
+                        <select class="form-input" id="expenseCategoryFinance" required>
+                            <option value="">選択してください</option>
+                            <option value="広告宣伝費">広告宣伝費</option>
+                            <option value="業務委託費">業務委託費</option>
+                            <option value="人件費">人件費</option>
+                            <option value="研究開発費">研究開発費</option>
+                            <option value="予備投資費">予備投資費</option>
+                        </select>
+                    </div>
+                    <div class="form-group" id="subcategoryGroup" style="display: none;">
+                        <label class="form-label" for="expenseSubcategory">詳細項目</label>
+                        <select class="form-input" id="expenseSubcategory">
+                            <option value="">選択してください</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="expenseAmount">金額</label>
+                        <input type="number" class="form-input" id="expenseAmount" required>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="cancelAddExpenseButton">キャンセル</button>
+                <button class="btn btn-primary" id="confirmAddExpenseButton">登録</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- キャンペーン追加モーダル -->
+    <div id="addCampaignModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>新規キャンペーン作成</h2>
+                <button class="close-btn" id="closeAddCampaignModalButton">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="addCampaignForm">
+                    <div class="form-group">
+                        <label class="form-label" for="campaignName">キャンペーン名</label>
+                        <input type="text" class="form-input" id="campaignName" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="campaignChannel">チャネル</label>
+                        <select class="form-input" id="campaignChannel" required>
+                            <option value="">選択してください</option>
+                            <option value="Google Ads">Google Ads</option>
+                            <option value="Facebook">Facebook</option>
+                            <option value="LinkedIn">LinkedIn</option>
+                            <option value="Email">メール</option>
+                            <option value="Content">コンテンツ</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="campaignBudget">予算</label>
+                        <input type="number" class="form-input" id="campaignBudget" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="campaignStartDate">開始日</label>
+                        <input type="date" class="form-input" id="campaignStartDate" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="campaignEndDate">終了日</label>
+                        <input type="date" class="form-input" id="campaignEndDate" required>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="cancelAddCampaignButton">キャンセル</button>
+                <button class="btn btn-primary" id="confirmAddCampaignButton">作成</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- インポートモーダル -->
+    <div id="importModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>顧客データインポート</h2>
+                <button class="close-btn" id="closeImportModalButton">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="upload-area" id="uploadArea">
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="#6f767e">
+                        <path d="M9 16h6v-6h4l-7-7-7 7h4zm-4 2h14v2H5z"/>
+                    </svg>
+                    <p>ファイルをドラッグ＆ドロップ</p>
+                    <p style="font-size: 14px; color: #6f767e;">または</p>
+                    <button class="btn btn-primary" id="selectFileButton">ファイルを選択</button>
+                    <input type="file" accept=".csv" style="display: none;" id="csvFileInput">
+                </div>
+                <div style="margin-top: 10px; font-size: 12px; color: #6f767e;">
+                    ※ CSV形式: 会社名,プラン,月額料金,初期費用,運用代行費,担当者,工数,地域,業界,獲得チャネル,ステータス,契約開始日
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <!--
+      IMPORTANT:
+      The 'index.tsx' file must be compiled to JavaScript (e.g., 'index.js').
+      You need a build process (e.g., using tsc, esbuild, webpack, parcel) to do this.
+      The command 'npx esbuild index.tsx --bundle --outfile=index.js --jsx=automatic --loader:.tsx=tsx'
+      is an example of how you might compile it using esbuild.
+      Ensure the compiled 'index.js' file is placed in the same directory as this HTML file,
+      or update the src path accordingly.
+    -->
+</body>
+</html>

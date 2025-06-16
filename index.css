@@ -1,0 +1,784 @@
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background-color: #f8f9fb;
+    color: #1a1d1f;
+    height: 100vh;
+    display: flex;
+    overflow: hidden; /* Prevent body scroll when modal is open potentially */
+}
+
+/* サイドバー */
+.sidebar {
+    width: 50px;
+    background-color: #272b30;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px 0;
+    position: fixed;
+    height: 100vh;
+    left: 0;
+    top: 0;
+    z-index: 200; /* Ensure sidebar is above content but below modals */
+}
+
+.sidebar-icon {
+    width: 24px;
+    height: 24px;
+    margin: 15px 0;
+    color: #6f767e;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.3s;
+}
+
+.sidebar-icon:hover {
+    color: #fff;
+}
+
+.sidebar-icon.active {
+    color: #fff;
+}
+
+/* ヘッダーナビゲーション */
+.header-nav {
+    position: fixed;
+    top: 0;
+    left: 50px;
+    right: 0;
+    background: white;
+    border-bottom: 1px solid #efefef;
+    padding: 0 30px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    z-index: 100;
+}
+
+.nav-tabs {
+    display: flex;
+    gap: 20px; /* Reduced gap */
+    height: 100%;
+}
+
+.nav-tab {
+    padding: 0 10px; /* Increased horizontal padding */
+    color: #6f767e;
+    text-decoration: none;
+    border-bottom: 3px solid transparent; /* Thicker border base for alignment */
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out; /* Adjusted transition */
+    height: 100%; /* Ensure tabs fill the vertical space for border placement */
+}
+
+.nav-tab:hover {
+    color: #1a1d1f;
+    border-bottom-color: #cccccc; /* Subtle border on hover */
+}
+
+.nav-tab.active {
+    color: #0066ff;
+    border-bottom-color: #0066ff; /* Uses 3px thickness from base */
+    font-weight: 600; /* Bolder active tab */
+}
+
+/* メインコンテンツ */
+.main-content {
+    margin-left: 50px;
+    margin-top: 60px;
+    padding: 30px;
+    width: calc(100% - 50px);
+    overflow-y: auto;
+    height: calc(100vh - 60px);
+}
+
+.content-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.page-title {
+    font-size: 24px;
+    font-weight: 600;
+    color: #1a1d1f;
+}
+
+/* カード */
+.card {
+    background: white;
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 24px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.card-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #1a1d1f;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* メトリクスグリッド */
+.metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 24px;
+    margin-bottom: 24px;
+}
+
+.metric-item {
+    background: white;
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.metric-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 8px;
+}
+
+.metric-label {
+    font-size: 14px;
+    font-weight: 500;
+    color: #6f767e;
+}
+
+.metric-value {
+    font-size: 32px;
+    font-weight: 600;
+    color: #1a1d1f;
+    margin: 8px 0;
+}
+
+.metric-value.negative { /* For negative balance in finance summary */
+    color: #ff3b30;
+}
+
+
+.metric-change {
+    font-size: 12px;
+    color: #6f767e;
+}
+
+.metric-change.positive {
+    color: #00c853;
+}
+
+.metric-change.negative {
+    color: #ff3b30;
+}
+
+/* テーブル */
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th {
+    text-align: left;
+    padding: 12px;
+    font-size: 12px;
+    font-weight: 500;
+    color: #6f767e;
+    text-transform: uppercase;
+    border-bottom: 1px solid #efefef;
+}
+
+td {
+    padding: 16px 12px;
+    font-size: 14px;
+    color: #1a1d1f;
+    border-bottom: 1px solid #f5f5f5;
+}
+
+tr:hover {
+    background: #f8f9fb;
+}
+
+tr.customer-row-selected {
+    background-color: #e3f2fd !important; /* Light blue, important to override hover */
+}
+
+
+/* ステータスバッジ */
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.status-badge.active {
+    background: #e8f5e9;
+    color: #2e7d32;
+}
+
+.status-badge.trial {
+    background: #e3f2fd;
+    color: #1565c0;
+}
+
+.status-badge.churned {
+    background: #ffebee;
+    color: #c62828;
+}
+
+.status-badge.pending {
+    background: #fff3e0;
+    color: #ef6c00;
+}
+
+/* ボタン */
+.btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn:disabled {
+    opacity: 0.65;
+    cursor: not-allowed;
+}
+
+
+.btn-primary {
+    background: #0066ff;
+    color: white;
+}
+
+.btn-primary:hover:not(:disabled) {
+    background: #0052cc;
+}
+
+
+.btn-secondary {
+    background: #f8f9fb;
+    color: #1a1d1f;
+    border: 1px solid #efefef;
+}
+
+.btn-secondary:hover:not(:disabled) {
+    background: #f0f1f3;
+}
+
+.btn-danger {
+    background-color: #ff3b30;
+    color: white;
+}
+
+.btn-danger:hover:not(:disabled) {
+    background-color: #c62828;
+}
+
+.btn-danger:disabled {
+    background-color: #ff3b30; /* Keep color but reduce opacity via general .btn:disabled */
+}
+
+
+/* モーダル */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    z-index: 1000; /* Ensure modals are on top */
+    justify-content: center; /* Added for flex centering */
+    align-items: center; /* Added for flex centering */
+}
+
+.modal.active { /* Use this class to show modal */
+    display: flex;
+}
+
+
+.modal-content {
+    /* position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); */ /* Removed for flex centering */
+    background: white;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 600px;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+}
+
+.modal-header {
+    padding: 24px;
+    border-bottom: 1px solid #efefef;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal-header h2 {
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.modal-body {
+    padding: 24px;
+}
+
+.modal-footer {
+    padding: 24px;
+    border-top: 1px solid #efefef;
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+}
+
+.close-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    border: none;
+    background: #f8f9fb;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #6f767e;
+}
+
+.close-btn:hover {
+    background: #f0f1f3;
+    color: #1a1d1f;
+}
+
+/* フォーム */
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-label {
+    display: block;
+    font-size: 14px;
+    font-weight: 500;
+    color: #1a1d1f;
+    margin-bottom: 8px;
+}
+
+.form-input {
+    width: 100%;
+    padding: 10px 16px;
+    border: 1px solid #efefef;
+    border-radius: 8px;
+    font-size: 14px;
+    transition: all 0.3s;
+    background-color: #fff; /* Ensure input background is white */
+}
+
+.form-input:focus {
+    outline: none;
+    border-color: #0066ff;
+    box-shadow: 0 0 0 3px rgba(0,102,255,0.1);
+}
+
+textarea.form-input {
+    resize: vertical;
+    min-height: 100px;
+}
+
+/* タブコンテンツ */
+.tab-content {
+    display: none;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+/* その他のスタイル */
+.dropdown {
+    position: relative;
+}
+
+.dropdown-toggle {
+    background: #f8f9fb;
+    border: 1px solid #efefef;
+    border-radius: 8px;
+    padding: 8px 16px;
+    font-size: 14px;
+    color: #1a1d1f;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.dropdown-toggle:hover {
+    background: #f0f1f3;
+}
+
+.breakdown-list {
+    list-style: none;
+}
+
+.breakdown-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid #f5f5f5;
+}
+
+.breakdown-item:last-child {
+    border-bottom: none;
+}
+
+.breakdown-label {
+    font-size: 14px;
+    color: #6f767e;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.breakdown-value {
+    font-size: 14px;
+    font-weight: 500;
+    color: #1a1d1f;
+}
+
+.breakdown-indicator {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #0066ff; /* Default for new business */
+}
+
+.breakdown-indicator.expansion {
+    background: #00c853; /* Green for expansion */
+}
+
+.breakdown-indicator.contraction {
+    background: #ff9500; /* Orange for contraction */
+}
+
+.breakdown-indicator.churn {
+    background: #ff3b30; /* Red for churn */
+}
+
+.breakdown-indicator.reactivation {
+    background: #34c759; /* Different Green for reactivation */
+}
+
+
+.chart-container {
+    height: 200px;
+    position: relative;
+    margin-top: 20px;
+}
+
+.no-data {
+    text-align: center;
+    color: #6f767e;
+    padding: 40px;
+    font-size: 14px;
+}
+
+.filter-bar {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 24px;
+    align-items: center;
+}
+
+.filter-bar .form-input {
+    max-width: 300px;
+}
+
+.segment-tag {
+    background: #e3f2fd;
+    color: #1565c0;
+    border: 1px solid #90caf9;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.segment-tag:hover {
+    background: #1565c0;
+    color: white;
+}
+
+/* 通知 */
+.notification {
+    position: fixed;
+    top: 80px; /* Adjusted to be below header */
+    right: 20px;
+    padding: 15px 20px;
+    border-radius: 8px;
+    color: white;
+    font-weight: 500;
+    animation: slideIn 0.3s ease-out;
+    z-index: 2000; /* Ensure notifications are on top */
+    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+}
+
+.notification.success {
+    background-color: #00c853;
+}
+
+.notification.error {
+    background-color: #ff3b30;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+/* インポートエリア */
+.upload-area {
+    border: 2px dashed #efefef;
+    border-radius: 12px;
+    padding: 40px;
+    text-align: center;
+    transition: all 0.3s;
+    cursor: pointer;
+}
+
+.upload-area:hover {
+    border-color: #0066ff;
+    background: #f8f9fb;
+}
+
+.upload-area.drag-over {
+    border-color: #0066ff;
+    background: #e3f2fd;
+}
+
+/* 収支テーブルスタイル */
+td.positive {
+    color: #00c853;
+    font-weight: 600;
+}
+
+td.negative {
+    color: #ff3b30;
+    font-weight: 600;
+}
+
+tfoot td {
+    font-size: 16px;
+    padding-top: 16px;
+}
+
+/* マーケティング固有スタイル */
+.campaign-card {
+    background: #f8f9fb;
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 12px;
+    transition: all 0.3s;
+}
+
+.campaign-card:hover {
+    background: #f0f1f3;
+}
+
+.lead-score {
+    display: inline-flex;
+    align-items: center;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.lead-score.hot {
+    background: #ffebee;
+    color: #c62828;
+}
+
+.lead-score.warm {
+    background: #fff3e0;
+    color: #ef6c00;
+}
+
+.lead-score.cold {
+    background: #e3f2fd;
+    color: #1565c0;
+}
+
+/* カスタマーサクセススタイル */
+.health-score {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.health-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+}
+
+.health-dot.healthy {
+    background: #00c853;
+}
+
+.health-dot.at-risk {
+    background: #ff9500;
+}
+
+.health-dot.critical {
+    background: #ff3b30;
+}
+
+/* タスクカード */
+.task-card {
+    background: #f8f9fb;
+    border-radius: 8px;
+    padding: 12px;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.task-checkbox {
+    width: 20px;
+    height: 20px;
+    border: 2px solid #dfdfe1; /* Adjusted border color */
+    border-radius: 4px;
+    cursor: pointer;
+    appearance: none; /* Remove default appearance */
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    display: inline-block;
+    position: relative;
+}
+
+.task-checkbox:checked {
+    background-color: #0066ff;
+    border-color: #0066ff;
+}
+
+.task-checkbox:checked::after {
+    content: '✔';
+    font-size: 14px;
+    color: white;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+
+
+/* プログレスバー */
+.progress-bar {
+    width: 100%;
+    height: 8px;
+    background: #efefef;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    background: #0066ff;
+    transition: width 0.3s;
+}
+
+/* レポートスタイル */
+.report-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.report-item {
+    padding: 16px;
+    background: #f8f9fb;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+
+.report-item:hover {
+    background: #f0f1f3;
+    transform: translateY(-2px);
+}
+
+.integration-card {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 20px;
+    background: #f8f9fb;
+    border-radius: 12px;
+    margin-bottom: 16px;
+    transition: all 0.3s;
+}
+
+.integration-card:hover {
+    background: #f0f1f3;
+}
+
+.integration-icon {
+    width: 48px;
+    height: 48px;
+    background: white;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+}
+
+.trophy-icon {
+    font-size: 1.2em; /* Adjust size as needed */
+    margin-right: 8px; /* Add some spacing */
+}

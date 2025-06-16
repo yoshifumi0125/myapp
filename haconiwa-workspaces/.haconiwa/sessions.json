@@ -1,0 +1,77 @@
+{
+  "test-company": {
+    "created": "2025-06-12T10:49:51.023205",
+    "workspace": "/Users/yoshifumikoide/Desktop/myapp/haconiwa-workspaces/test-company",
+    "config": {
+      "orgs": [
+        {
+          "name": "Frontend",
+          "task": "UI Development"
+        },
+        {
+          "name": "Backend",
+          "task": "API Development"
+        },
+        {
+          "name": "Database",
+          "task": "Schema Design"
+        },
+        {
+          "name": "DevOps",
+          "task": "Infrastructure"
+        }
+      ]
+    },
+    "status": "stopped"
+  },
+  "my-dev-company": {
+    "created": "2025-06-12T10:50:57.729281",
+    "workspace": "/Users/yoshifumikoide/Desktop/myapp/haconiwa-workspaces/my-dev-company",
+    "config": {
+      "orgs": [
+        {
+          "name": "Frontend",
+          "task": "UI Development"
+        },
+        {
+          "name": "Backend",
+          "task": "API Development"
+        },
+        {
+          "name": "Database",
+          "task": "Schema Design"
+        },
+        {
+          "name": "DevOps",
+          "task": "Infrastructure"
+        }
+      ]
+    },
+    "status": "running"
+  },
+  "my-project": {
+    "created": "2025-06-12T10:53:07.810399",
+    "workspace": "/Users/yoshifumikoide/Desktop/myapp/haconiwa-workspaces/my-project",
+    "config": {
+      "orgs": [
+        {
+          "name": "Frontend",
+          "task": "UI Development"
+        },
+        {
+          "name": "Backend",
+          "task": "API Development"
+        },
+        {
+          "name": "Database",
+          "task": "Schema Design"
+        },
+        {
+          "name": "DevOps",
+          "task": "Infrastructure"
+        }
+      ]
+    },
+    "status": "running"
+  }
+}

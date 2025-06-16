@@ -1,0 +1,28 @@
+# XServer用 .htaccess (CGIモード)
+
+Options +ExecCGI
+AddHandler cgi-script .cgi
+
+# HTTPSへのリダイレクト
+RewriteEngine On
+RewriteCond %{HTTPS} off
+RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+# 静的ファイルは直接配信
+RewriteCond %{REQUEST_URI} ^/saas/dist/
+RewriteRule ^saas/dist/(.*)$ dist/$1 [L]
+
+# すべてのリクエストをapp.cgiに転送
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ app.cgi/$1 [L]
+
+# セキュリティヘッダー
+Header set X-Content-Type-Options "nosniff"
+Header set X-Frame-Options "DENY"
+Header set X-XSS-Protection "1; mode=block"
+
+# Pythonファイルへの直接アクセスを禁止
+<FilesMatch "\.(py|pyc|pyo|env)$">
+    Require all denied
+</FilesMatch>

@@ -1,0 +1,104 @@
+# XServerデプロイ用コマンド集
+# これらのコマンドをターミナルで順番に実行してください
+
+# ================================
+# 1. ローカルでの準備（現在のディレクトリで実行）
+# ================================
+
+# ディレクトリ確認
+pwd
+# 期待値: /Users/yoshifumikoide/Desktop/myapp
+
+# ================================
+# 2. SSHでディレクトリ作成
+# ================================
+
+ssh yoshifumik@sv14067.xserver.jp 'mkdir -p /home/yoshifumik/gta-test1.com/public_html/saas/migrations'
+
+# ================================
+# 3. ファイルアップロード（1つずつ実行）
+# ================================
+
+# Pythonファイル
+scp main.py yoshifumik@sv14067.xserver.jp:/home/yoshifumik/gta-test1.com/public_html/saas/
+scp models.py yoshifumik@sv14067.xserver.jp:/home/yoshifumik/gta-test1.com/public_html/saas/
+scp api_extensions.py yoshifumik@sv14067.xserver.jp:/home/yoshifumik/gta-test1.com/public_html/saas/
+scp requirements.txt yoshifumik@sv14067.xserver.jp:/home/yoshifumik/gta-test1.com/public_html/saas/
+
+# スクリプトファイル
+scp migrate_saas_extensions.py yoshifumik@sv14067.xserver.jp:/home/yoshifumik/gta-test1.com/public_html/saas/
+scp migrate_xserver.py yoshifumik@sv14067.xserver.jp:/home/yoshifumik/gta-test1.com/public_html/saas/
+scp run_xserver.py yoshifumik@sv14067.xserver.jp:/home/yoshifumik/gta-test1.com/public_html/saas/
+scp xserver_start.sh yoshifumik@sv14067.xserver.jp:/home/yoshifumik/gta-test1.com/public_html/saas/
+
+# 設定ファイル
+scp .env.xserver yoshifumik@sv14067.xserver.jp:/home/yoshifumik/gta-test1.com/public_html/saas/
+scp xserver_htaccess yoshifumik@sv14067.xserver.jp:/home/yoshifumik/gta-test1.com/public_html/saas/
+
+# SQLファイル
+scp migrations/add_saas_tables.sql yoshifumik@sv14067.xserver.jp:/home/yoshifumik/gta-test1.com/public_html/saas/migrations/
+
+# フロントエンドファイル（ディレクトリごと）
+rsync -avz dist/ yoshifumik@sv14067.xserver.jp:/home/yoshifumik/gta-test1.com/public_html/saas/dist/
+
+# ================================
+# 4. XServerにSSH接続
+# ================================
+
+ssh yoshifumik@sv14067.xserver.jp
+
+# ================================
+# 5. XServer内での作業（SSH接続後）
+# ================================
+
+# ディレクトリ移動
+cd /home/yoshifumik/gta-test1.com/public_html/saas
+
+# ファイル確認
+ls -la
+
+# .htaccessをコピー
+cp xserver_htaccess .htaccess
+
+# 実行権限を付与
+chmod +x migrate_xserver.py
+chmod +x run_xserver.py
+chmod +x xserver_start.sh
+
+# ログディレクトリ作成
+mkdir -p /home/yoshifumik/logs
+
+# 依存パッケージインストール
+pip3 install --user -r requirements.txt
+
+# または個別にインストール
+pip3 install --user flask
+pip3 install --user flask-cors
+pip3 install --user flask-sqlalchemy
+pip3 install --user sqlalchemy
+pip3 install --user pymysql
+
+# データベースマイグレーション
+python3 migrate_xserver.py
+
+# アプリケーション起動
+bash xserver_start.sh
+
+# ログ確認
+tail -f /home/yoshifumik/logs/app.log
+
+# ================================
+# 6. 動作確認
+# ================================
+
+# プロセス確認
+ps aux | grep python
+
+# curlでヘルスチェック（XServer内から）
+curl http://localhost:8080/health
+
+# ================================
+# 7. ブラウザでアクセス
+# ================================
+
+# URL: https://gta-test1.com/saas/

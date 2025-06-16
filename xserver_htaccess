@@ -1,0 +1,26 @@
+# XServer用 .htaccess設定
+
+# Pythonアプリケーションへのプロキシ設定
+RewriteEngine On
+
+# HTTPSへのリダイレクト
+RewriteCond %{HTTPS} off
+RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+# 静的ファイルは直接配信
+RewriteCond %{REQUEST_URI} ^/dist/
+RewriteRule ^dist/(.*)$ dist/$1 [L]
+
+# APIリクエストをPythonアプリケーションに転送
+RewriteCond %{REQUEST_URI} ^/api/
+RewriteRule ^(.*)$ http://localhost:8080/$1 [P,L]
+
+# その他のリクエストもPythonアプリケーションに転送
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ http://localhost:8080/$1 [P,L]
+
+# セキュリティヘッダー
+Header set X-Content-Type-Options "nosniff"
+Header set X-Frame-Options "DENY"
+Header set X-XSS-Protection "1; mode=block"

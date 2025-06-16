@@ -1,0 +1,44 @@
+# Python CGI設定
+Options +ExecCGI
+AddHandler cgi-script .py
+
+# 静的ファイルとAPIルーティング
+RewriteEngine On
+
+# APIリクエストをPythonスクリプトにルーティング
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^api/(.*)$ /cgi-bin/main.py/$1 [QSA,L]
+
+# 静的ファイル（JS、CSS、画像など）は直接配信
+RewriteCond %{REQUEST_FILENAME} -f
+RewriteRule ^(.*)$ - [L]
+
+# フロントエンドのSPA対応（すべてのルートをindex.htmlに）
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_URI} !^/api/
+RewriteRule ^.*$ /index.html [L]
+
+# セキュリティヘッダー
+Header set X-Content-Type-Options "nosniff"
+Header set X-Frame-Options "DENY"
+Header set X-XSS-Protection "1; mode=block"
+Header set Referrer-Policy "strict-origin-when-cross-origin"
+
+# キャッシュ設定
+<FilesMatch "\.(js|css|png|jpg|jpeg|gif|svg|ico)$">
+    Header set Cache-Control "max-age=31536000, public"
+</FilesMatch>
+
+# .envファイルへのアクセスを禁止
+<Files ".env*">
+    Order allow,deny
+    Deny from all
+</Files>
+
+# Pythonファイルの直接アクセスを禁止（cgi-bin以外）
+<FilesMatch "\.py$">
+    Order allow,deny
+    Deny from all
+</FilesMatch>

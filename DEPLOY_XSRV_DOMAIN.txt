@@ -1,0 +1,23 @@
+# XServer初期ドメイン用デプロイコマンド
+# yoshifumik.xsrv.jp を使用
+
+# 1. ディレクトリ作成
+ssh yoshifumik@sv14067.xserver.jp 'mkdir -p /home/yoshifumik/yoshifumik.xsrv.jp/public_html/saas/migrations'
+
+# 2. ファイルアップロード
+scp main.py yoshifumik@sv14067.xserver.jp:/home/yoshifumik/yoshifumik.xsrv.jp/public_html/saas/
+scp models.py yoshifumik@sv14067.xserver.jp:/home/yoshifumik/yoshifumik.xsrv.jp/public_html/saas/
+scp api_extensions.py yoshifumik@sv14067.xserver.jp:/home/yoshifumik/yoshifumik.xsrv.jp/public_html/saas/
+scp requirements.txt yoshifumik@sv14067.xserver.jp:/home/yoshifumik/yoshifumik.xsrv.jp/public_html/saas/
+scp .env.xserver yoshifumik@sv14067.xserver.jp:/home/yoshifumik/yoshifumik.xsrv.jp/public_html/saas/
+scp test.html yoshifumik@sv14067.xserver.jp:/home/yoshifumik/yoshifumik.xsrv.jp/public_html/saas/
+
+# 3. SSH接続
+ssh yoshifumik@sv14067.xserver.jp
+
+# 4. XServer内での作業
+cd /home/yoshifumik/yoshifumik.xsrv.jp/public_html/saas
+ls -la
+
+# 5. ブラウザでテスト
+# https://yoshifumik.xsrv.jp/saas/test.html
