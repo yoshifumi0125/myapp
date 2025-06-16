@@ -1,2 +1,0 @@
-2025/06/01 20:55:23 Authorizing with Application Default Credentials
-2025/06/01 20:55:23 The proxy has encountered a terminal error: unable to start: error initializing dialer: failed to create default credentials: google: could not find default credentials. See https://cloud.google.com/docs/authentication/external/set-up-adc for more information

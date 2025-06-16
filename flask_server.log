@@ -1,7 +1,0 @@
-データベース接続エラー: (pymysql.err.OperationalError) (2003, "Can't connect to MySQL server on 'localhost' ([Errno 61] Connection refused)")
-(Background on this error at: https://sqlalche.me/e/20/e3q8)
-Cloud SQL Proxy が起動していることを確認してください。
- * Serving Flask app 'main_local'
- * Debug mode: on
-Address already in use
-Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.

@@ -57,7 +57,7 @@ class Customer(Base):
     industry = Column(String(255))
     channel = Column(String(255))
     status = Column(String(50))
-    start_date = Column(String(20))
+    contract_date = Column(String(20))
     health_score = Column(Integer)
     last_login = Column(String(20))
     support_tickets = Column(Integer)
@@ -133,7 +133,7 @@ def save_data():
             industry=data.get('industry'),
             channel=data.get('channel'),
             status=data.get('status', 'active'),
-            start_date=data.get('startDate'),
+            contract_date=data.get('startDate'),
             health_score=data.get('healthScore', 50),
             last_login=data.get('lastLogin', datetime.now().strftime('%Y/%m/%d')),
             support_tickets=data.get('supportTickets', 0),
@@ -189,7 +189,7 @@ def get_customers():
                 'industry': customer.industry,
                 'channel': customer.channel,
                 'status': customer.status,
-                'startDate': customer.start_date,
+                'startDate': customer.contract_date,
                 'healthScore': customer.health_score,
                 'lastLogin': customer.last_login,
                 'supportTickets': customer.support_tickets,
