@@ -1,0 +1,7 @@
+✅ データベース接続成功: 35.232.151.129:3306/saas1
+✅ テーブルが確認/作成されました
+✅ Flask server starting on port 8080
+ * Serving Flask app 'main_local_env'
+ * Debug mode: on
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.

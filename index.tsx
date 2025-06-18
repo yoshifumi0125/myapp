@@ -435,9 +435,13 @@ async function addCustomer() {
             throw new Error(`サーバーエラー: ${response.status} ${errorText}`);
         }
 
-        // Optional: If backend returns the saved customer (e.g., with a server-generated ID), use that.
-        // const savedCustomer = await response.json();
-        // For now, we'll assume the newCustomer object is sufficient or the backend uses the provided ID.
+        // Get the response from backend which includes the customer_id
+        const savedResponse = await response.json();
+        
+        // Update the customer ID with the one from the database
+        if (savedResponse.customer_id) {
+            newCustomer.id = savedResponse.customer_id;
+        }
 
         dataStore.customers.push(newCustomer); // Add to local store on successful save
         closeModal('addCustomerModal');
@@ -1619,9 +1623,35 @@ function setupEventListeners() {
 }
 
 // --- Initial Load ---
-window.addEventListener('DOMContentLoaded', () => {
+// Function to load customers from database
+async function loadCustomersFromDatabase() {
+    try {
+        const response = await fetch(`${API_URL}/customers`);
+        if (response.ok) {
+            const data = await response.json();
+            if (data.status === 'success' && data.customers) {
+                // Replace sample data with database data
+                dataStore.customers = data.customers;
+                console.log(`Loaded ${data.customers.length} customers from database`);
+                
+                // Update all views
+                renderCustomersTable();
+                updateDashboard();
+                updateFinanceMetrics();
+            }
+        }
+    } catch (error) {
+        console.error('Failed to load customers from database:', error);
+        // Continue with sample data if database load fails
+    }
+}
+
+window.addEventListener('DOMContentLoaded', async () => {
     initializeSampleData();
     setupEventListeners();
+    
+    // Load customers from database
+    await loadCustomersFromDatabase();
     
     const initialTab = document.querySelector('.nav-tab.active')?.getAttribute('data-tab-target') || 'home';
     switchTab(initialTab);

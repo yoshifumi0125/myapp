@@ -25,7 +25,13 @@ DATABASE_URI = f"mysql+pymysql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB
 
 # データベース接続テスト
 try:
-    engine = create_engine(DATABASE_URI)
+    engine = create_engine(
+        DATABASE_URI,
+        pool_pre_ping=True,  # 接続前にpingを送信して接続をチェック
+        pool_recycle=3600,   # 1時間ごとに接続をリサイクル
+        pool_size=5,         # プールサイズ
+        max_overflow=10      # 最大オーバーフロー
+    )
     # 接続テスト
     from sqlalchemy import text
     with engine.connect() as conn:
@@ -93,6 +99,7 @@ def health_check():
     
     try:
         session = SessionLocal()
+        from sqlalchemy import text
         session.execute(text("SELECT 1"))
         session.close()
         return jsonify({
